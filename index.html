@@ -34,8 +34,8 @@
     :root{
       --cream:#F0ECE1; --field:#E7E2D5; --ink:#121212;
       --red:#C0392B; --green:#2FAE66; --muted:#8C8A85;
-      /* Cor do texto + ícone do botão: #2FAE66 verde · #fff branco · #C0392B vermelho */
-      --cta-txt:#2FAE66;
+      /* Cor do texto + ícone do botão (fundo vermelho): #fff branco · #121212 escuro */
+      --cta-txt:#fff;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     [hidden]{display:none}
@@ -65,8 +65,8 @@
     .data-linha{font-size:15px;color:#3A3A3A;margin-bottom:28px}
     .cta{
       display:flex;align-items:center;justify-content:center;gap:12px;width:100%;
-      padding:22px;background:var(--ink);color:var(--cta-txt);text-decoration:none;
-      border:none;cursor:pointer;
+      padding:22px;background:var(--red);color:var(--cta-txt);text-decoration:none;
+      border:none;cursor:pointer;position:relative;overflow:hidden;
       border-radius:16px;font-family:"Anton",sans-serif;font-size:clamp(1.25rem,5.5vw,1.5rem);letter-spacing:.02em;
     }
     .cta[disabled]{opacity:.6;cursor:not-allowed;animation:none}
@@ -88,10 +88,11 @@
     .form-erro{font-size:13px;color:var(--red);text-align:center}
     .form-erro:empty{display:none}
 
-    .chips{display:flex;gap:8px}
-    .chip{flex:1;padding:13px 0;border:1.5px solid #D8D2C4;border-radius:12px;background:#fff;font-family:"DM Sans",sans-serif;font-size:15px;font-weight:700;color:#3A3A3A;cursor:pointer;transition:all .12s ease}
-    .chip.sel{background:var(--ink);border-color:var(--ink);color:#fff}
-    .chip:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+    .stepper{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1.5px solid #D8D2C4;border-radius:12px;padding:8px 12px}
+    .step-btn{width:46px;height:46px;border:none;border-radius:10px;background:var(--ink);color:#fff;font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .step-btn[aria-disabled="true"]{opacity:.35;cursor:default}
+    .step-btn:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+    .step-num{font-family:"Anton",sans-serif;font-size:26px;color:var(--ink);min-width:44px;text-align:center}
 
     .local-box{background:var(--field);border-radius:14px;padding:18px;text-align:left;margin-bottom:20px}
     .lb-tit{font-size:11px;letter-spacing:.2em;color:var(--red);font-weight:700}
@@ -109,8 +110,10 @@
     .cta{opacity:0;transition:transform .16s ease;animation:rise .55s cubic-bezier(.2,.7,.2,1) .32s forwards, pulse 2.2s ease-in-out 1.4s infinite}
     .cta:hover{transform:translateY(-2px)}
     .cta:active{transform:translateY(0)}
-    .cta:focus-visible{outline:3px solid var(--red);outline-offset:3px}
-    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(18,18,18,.28)}50%{box-shadow:0 0 0 12px rgba(18,18,18,0)}}
+    .cta:focus-visible{outline:3px solid #121212;outline-offset:3px}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.30)}50%{box-shadow:0 0 0 12px rgba(192,57,43,0)}}
+    .btn-cruz{position:absolute;top:50%;left:50%;width:132px;height:132px;transform:translate(-50%,-50%);fill:#fff;opacity:.10;pointer-events:none}
+    .btn-conteudo{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:10px}
     .cf{position:absolute;top:-14px;width:10px;height:10px;opacity:.85;pointer-events:none;animation:fall 6.5s linear infinite}
     @keyframes fall{0%{transform:translateY(-14px) rotate(0);opacity:0}10%{opacity:.85}100%{transform:translateY(640px) rotate(240deg);opacity:0}}
     @media(prefers-reduced-motion:reduce){.rise,.cta,.cf{animation:none;opacity:1}}
@@ -157,31 +160,26 @@
         </div>
 
         <div class="campo">
-          <span class="rotulo" id="lbl-acomp">Vai levar quantas pessoas? (opcional)</span>
-          <div class="chips" id="chips" role="radiogroup" aria-labelledby="lbl-acomp">
-            <button type="button" class="chip sel" data-v="0" role="radio" aria-checked="true" tabindex="0">0</button>
-            <button type="button" class="chip" data-v="1" role="radio" aria-checked="false" tabindex="-1">1</button>
-            <button type="button" class="chip" data-v="2" role="radio" aria-checked="false" tabindex="-1">2</button>
-            <button type="button" class="chip" data-v="3" role="radio" aria-checked="false" tabindex="-1">3+</button>
+          <span class="rotulo" id="acomp-label">Vai levar acompanhantes? (opcional)</span>
+          <div class="stepper" role="group" aria-labelledby="acomp-label">
+            <button type="button" class="step-btn" id="acomp-menos" aria-label="Diminuir" aria-disabled="true">−</button>
+            <span class="step-num" id="acomp-num" aria-live="polite" aria-atomic="true">0</span>
+            <button type="button" class="step-btn" id="acomp-mais" aria-label="Aumentar">+</button>
           </div>
         </div>
 
-        <div class="campo" id="mais-wrap" hidden>
-          <label for="mais">Quantas você vai levar?</label>
-          <input type="number" id="mais" min="3" max="30" step="1" value="3" inputmode="numeric" />
-        </div>
-
         <button type="submit" class="cta" id="btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.86 13.6c-.26.73-1.52 1.41-2.12 1.5-.54.08-1.23.12-1.98-.12-.45-.14-1.04-.31-1.79-.6-3.15-1.23-5.2-4.4-5.36-4.61-.16-.21-1.29-1.71-1.29-3.26 0-1.54.81-2.31 1.1-2.62.29-.31.63-.39.84-.39h.6c.19.01.45-.07.71.54.27.63.9 2.19.98 2.35.08.16.13.34.03.55-.1.21-.15.34-.31.52-.16.18-.33.41-.47.55-.16.15-.32.32-.14.63.18.31.81 1.33 1.74 2.16 1.19 1.06 2.2 1.39 2.51 1.55.31.16.5.13.68-.08.19-.21.79-.92 1-1.23.21-.32.42-.27.71-.16.29.1 1.84.86 2.15 1.02.31.16.52.24.6.37.08.13.08.76-.18 1.49Z"/>
-          </svg>
-          <span id="btn-txt">CONFIRMAR PRESENÇA</span>
+          <svg class="btn-cruz" viewBox="0 0 100 100" aria-hidden="true"><path d="M50,50 L38,4 L50,18 L62,4 Z M50,50 L96,38 L82,50 L96,62 Z M50,50 L62,96 L50,82 L38,96 Z M50,50 L4,62 L18,50 L4,38 Z"/></svg>
+          <span class="btn-conteudo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+            <span id="btn-txt">CONFIRMAR PRESENÇA</span>
+          </span>
         </button>
 
         <p class="form-erro" id="form-erro" role="status" aria-live="polite"></p>
       </form>
 
-      <p class="lgpd rise d4">Ao confirmar, você concorda em receber pelo WhatsApp os detalhes do evento. Seus dados são usados só para isso, conforme a LGPD.</p>
+      <p class="lgpd rise d4">Seus dados são usados apenas para organizar a festa.</p>
     </section>
 
     <section id="confirmado" hidden>
@@ -244,40 +242,29 @@
     var inputNome = document.getElementById("nome");
     var inputWhats = document.getElementById("whatsapp");
 
-    var chips = Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
-    var maisWrap = document.getElementById("mais-wrap");
-    var inputMais = document.getElementById("mais");
-    var chipSel = 0;
+    var acompanhantes = 0;
+    var ACOMP_MAX = 30;
+    var acompNum = document.getElementById("acomp-num");
+    var acompMenos = document.getElementById("acomp-menos");
+    var acompMais = document.getElementById("acomp-mais");
 
-    function selecionar(alvo){
-      chips.forEach(function(c){
-        var on = c === alvo;
-        c.classList.toggle("sel", on);
-        c.setAttribute("aria-checked", on ? "true" : "false");
-        c.tabIndex = on ? 0 : -1;
-      });
-      chipSel = parseInt(alvo.dataset.v, 10);
-      maisWrap.hidden = chipSel !== 3;
+    function renderAcomp(){
+      acompNum.textContent = acompanhantes;
+      acompMenos.setAttribute("aria-disabled", acompanhantes <= 0 ? "true" : "false");
+      acompMais.setAttribute("aria-disabled", acompanhantes >= ACOMP_MAX ? "true" : "false");
     }
 
-    // O form é novalidate, então min/max do HTML não valem nada — o teto vem daqui.
-    function valorAcomp(){
-      if(chipSel !== 3) return chipSel;
-      return Math.min(30, Math.max(3, parseInt(inputMais.value, 10) || 3));
+    // aria-disabled não bloqueia o clique como disabled — o limite é imposto aqui.
+    function passo(d){
+      var novo = Math.min(ACOMP_MAX, Math.max(0, acompanhantes + d));
+      if(novo === acompanhantes) return;
+      acompanhantes = novo;
+      renderAcomp();
     }
 
-    chips.forEach(function(c, i){
-      c.addEventListener("click", function(){ selecionar(c); });
-      c.addEventListener("keydown", function(e){
-        var passo = (e.key === "ArrowRight" || e.key === "ArrowDown") ? 1
-                  : (e.key === "ArrowLeft" || e.key === "ArrowUp") ? -1 : 0;
-        if(!passo) return;
-        e.preventDefault();
-        var proximo = chips[(i + passo + chips.length) % chips.length];
-        selecionar(proximo);
-        proximo.focus();
-      });
-    });
+    acompMenos.addEventListener("click", function(){ passo(-1); });
+    acompMais.addEventListener("click", function(){ passo(1); });
+    renderAcomp();
 
     function soDigitos(v){ return v.replace(/\D/g, ""); }
 
@@ -366,7 +353,7 @@
       var payload = {
         nome: nome,
         whatsapp: soDigitos(inputWhats.value),
-        acompanhantes: valorAcomp()
+        acompanhantes: acompanhantes
       };
 
       btn.disabled = true;
