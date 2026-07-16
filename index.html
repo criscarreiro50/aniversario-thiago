@@ -93,6 +93,16 @@
     .chip.sel{background:var(--ink);border-color:var(--ink);color:#fff}
     .chip:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 
+    .local-box{background:var(--field);border-radius:14px;padding:18px;text-align:left;margin-bottom:20px}
+    .lb-tit{font-size:11px;letter-spacing:.2em;color:var(--red);font-weight:700}
+    .lb-nome{font-size:16px;font-weight:700;color:var(--ink);margin-top:6px}
+    .lb-end{font-size:13.5px;color:#5A5A5A;line-height:1.45;margin-top:2px}
+    .end-acoes{display:flex;align-items:center;gap:14px;margin-top:12px}
+    .end-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;padding:0;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;color:var(--ink)}
+    .end-btn.ok{color:var(--green)}
+    .end-link{font-size:13px;font-weight:700;color:var(--red);text-decoration:none}
+    .end-link:hover{text-decoration:underline}
+
     .rise{opacity:0;animation:rise .55s cubic-bezier(.2,.7,.2,1) forwards}
     .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
     @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -131,7 +141,7 @@
         <div class="cd-bloco dest"><div class="cd-num" id="cd-s">--</div><div class="cd-cap">SEG</div></div>
       </div>
 
-      <p class="data-linha rise d4">Sábado, <b>29/08</b> · <b>12h</b> · Clube do Recanto, Barra Mansa</p>
+      <p class="data-linha rise d4">Sábado, <b>29/08</b> · <b>12h</b></p>
 
       <form class="form rise d4" id="form" novalidate>
         <div class="campo" id="campo-nome">
@@ -156,6 +166,11 @@
           </div>
         </div>
 
+        <div class="campo" id="mais-wrap" hidden>
+          <label for="mais">Quantas você vai levar?</label>
+          <input type="number" id="mais" min="3" max="30" step="1" value="3" inputmode="numeric" />
+        </div>
+
         <button type="submit" class="cta" id="btn">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.86 13.6c-.26.73-1.52 1.41-2.12 1.5-.54.08-1.23.12-1.98-.12-.45-.14-1.04-.31-1.79-.6-3.15-1.23-5.2-4.4-5.36-4.61-.16-.21-1.29-1.71-1.29-3.26 0-1.54.81-2.31 1.1-2.62.29-.31.63-.39.84-.39h.6c.19.01.45-.07.71.54.27.63.9 2.19.98 2.35.08.16.13.34.03.55-.1.21-.15.34-.31.52-.16.18-.33.41-.47.55-.16.15-.32.32-.14.63.18.31.81 1.33 1.74 2.16 1.19 1.06 2.2 1.39 2.51 1.55.31.16.5.13.68-.08.19-.21.79-.92 1-1.23.21-.32.42-.27.71-.16.29.1 1.84.86 2.15 1.02.31.16.52.24.6.37.08.13.08.76-.18 1.49Z"/>
@@ -178,7 +193,20 @@
 
       <p class="tagline rise d2" id="msg-confirmado">Tá na lista. Agora é só chegar.</p>
 
-      <p class="data-linha rise d3">Sábado, <b>29/08</b> · <b>12h</b> · Clube do Recanto, Barra Mansa</p>
+      <p class="data-linha rise d3">Sábado, <b>29/08</b> · <b>12h</b></p>
+
+      <div class="local-box rise d4">
+        <span class="lb-tit">ONDE</span>
+        <p class="lb-nome">Clube do Recanto</p>
+        <p class="lb-end">Av. Ministro Amaral Peixoto, 565<br>Barra Mansa - RJ</p>
+        <div class="end-acoes">
+          <button type="button" class="end-btn" id="copiar-end">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span id="copiar-txt" aria-live="polite">Copiar endereço</span>
+          </button>
+          <a class="end-link" href="https://www.google.com/maps?q=-22.5362988,-44.1915904" target="_blank" rel="noopener noreferrer">Ver no mapa</a>
+        </div>
+      </div>
 
       <p class="lgpd rise d4">Qualquer novidade sobre o rolê, a gente te avisa no WhatsApp.</p>
     </section>
@@ -217,7 +245,9 @@
     var inputWhats = document.getElementById("whatsapp");
 
     var chips = Array.prototype.slice.call(document.querySelectorAll("#chips .chip"));
-    var acompanhantes = 0;
+    var maisWrap = document.getElementById("mais-wrap");
+    var inputMais = document.getElementById("mais");
+    var chipSel = 0;
 
     function selecionar(alvo){
       chips.forEach(function(c){
@@ -226,7 +256,14 @@
         c.setAttribute("aria-checked", on ? "true" : "false");
         c.tabIndex = on ? 0 : -1;
       });
-      acompanhantes = parseInt(alvo.dataset.v, 10);
+      chipSel = parseInt(alvo.dataset.v, 10);
+      maisWrap.hidden = chipSel !== 3;
+    }
+
+    // O form é novalidate, então min/max do HTML não valem nada — o teto vem daqui.
+    function valorAcomp(){
+      if(chipSel !== 3) return chipSel;
+      return Math.min(30, Math.max(3, parseInt(inputMais.value, 10) || 3));
     }
 
     chips.forEach(function(c, i){
@@ -299,6 +336,27 @@
       window.scrollTo(0, 0);
     }
 
+    var ENDERECO = "Clube do Recanto - Av. Ministro Amaral Peixoto, 565, Barra Mansa - RJ";
+    document.getElementById("copiar-end").addEventListener("click", function(){
+      var alvo = document.getElementById("copiar-txt");
+      var btn = document.getElementById("copiar-end");
+      function feedback(){
+        btn.classList.add("ok");
+        alvo.textContent = "Endereço copiado!";
+        setTimeout(function(){ btn.classList.remove("ok"); alvo.textContent = "Copiar endereço"; }, 2000);
+      }
+      function fallback(){
+        var t = document.createElement("textarea");
+        t.value = ENDERECO; t.style.position = "fixed"; t.style.left = "-9999px";
+        document.body.appendChild(t); t.select();
+        try { document.execCommand("copy"); feedback(); } catch(e){}
+        document.body.removeChild(t);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ENDERECO).then(feedback).catch(fallback);
+      } else { fallback(); }
+    });
+
     form.addEventListener("submit", function(e){
       e.preventDefault();
       formErro.textContent = "";
@@ -308,7 +366,7 @@
       var payload = {
         nome: nome,
         whatsapp: soDigitos(inputWhats.value),
-        acompanhantes: acompanhantes
+        acompanhantes: valorAcomp()
       };
 
       btn.disabled = true;
