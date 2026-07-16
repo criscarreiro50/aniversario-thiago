@@ -38,6 +38,7 @@
       --cta-txt:#2FAE66;
     }
     *{box-sizing:border-box;margin:0;padding:0}
+    [hidden]{display:none}
     body{
       min-height:100vh;display:flex;align-items:center;justify-content:center;
       padding:32px 18px;background:var(--field);
@@ -65,9 +66,27 @@
     .cta{
       display:flex;align-items:center;justify-content:center;gap:12px;width:100%;
       padding:22px;background:var(--ink);color:var(--cta-txt);text-decoration:none;
+      border:none;cursor:pointer;
       border-radius:16px;font-family:"Anton",sans-serif;font-size:clamp(1.25rem,5.5vw,1.5rem);letter-spacing:.02em;
     }
+    .cta[disabled]{opacity:.6;cursor:not-allowed;animation:none}
     .lgpd{font-size:12px;color:#9A978F;line-height:1.5;margin:16px auto 0;max-width:360px}
+
+    .form{display:flex;flex-direction:column;gap:14px;text-align:left}
+    .campo{display:flex;flex-direction:column;gap:6px}
+    .campo label{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+    .campo input{
+      width:100%;background:var(--field);border:1px solid transparent;border-radius:12px;
+      padding:14px;font-family:inherit;color:var(--ink);
+      font-size:16px; /* abaixo de 16px o iOS dá zoom ao focar o campo */
+    }
+    .campo input::placeholder{color:#A9A69F}
+    .campo input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+    .campo.invalido input{border-color:var(--red)}
+    .erro{font-size:12px;color:var(--red);display:none}
+    .campo.invalido .erro{display:block}
+    .form-erro{font-size:13px;color:var(--red);text-align:center}
+    .form-erro:empty{display:none}
 
     .rise{opacity:0;animation:rise .55s cubic-bezier(.2,.7,.2,1) forwards}
     .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
@@ -77,58 +96,95 @@
     .cta:active{transform:translateY(0)}
     .cta:focus-visible{outline:3px solid var(--red);outline-offset:3px}
     @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(18,18,18,.28)}50%{box-shadow:0 0 0 12px rgba(18,18,18,0)}}
-    .cf{position:absolute;top:-14px;width:10px;height:10px;opacity:.85;pointer-events:none;animation:fall 6s linear infinite}
-    @keyframes fall{0%{transform:translateY(-14px) rotate(0);opacity:0}12%{opacity:.85}100%{transform:translateY(170px) rotate(240deg);opacity:0}}
+    .cf{position:absolute;top:-14px;width:10px;height:10px;opacity:.85;pointer-events:none;animation:fall 6.5s linear infinite}
+    @keyframes fall{0%{transform:translateY(-14px) rotate(0);opacity:0}10%{opacity:.85}100%{transform:translateY(640px) rotate(240deg);opacity:0}}
     @media(prefers-reduced-motion:reduce){.rise,.cta,.cf{animation:none;opacity:1}}
   </style>
 </head>
 <body>
   <main class="card">
     <span class="cf" style="left:12%;background:#C0392B"></span>
-    <span class="cf" style="left:32%;background:#121212;animation-delay:.4s"></span>
-    <span class="cf" style="left:68%;background:#2FAE66;animation-delay:.8s;border-radius:50%"></span>
-    <span class="cf" style="left:86%;background:#C0392B;animation-delay:.2s"></span>
-    <span class="cf" style="left:52%;background:#121212;animation-delay:1.1s;border-radius:50%"></span>
+    <span class="cf" style="left:32%;background:#121212;animation-delay:.5s"></span>
+    <span class="cf" style="left:68%;background:#2FAE66;animation-delay:1s;border-radius:50%"></span>
+    <span class="cf" style="left:86%;background:#C0392B;animation-delay:.25s"></span>
+    <span class="cf" style="left:52%;background:#121212;animation-delay:1.4s;border-radius:50%"></span>
 
-    <p class="eyebrow rise">É aniversário do</p>
+    <section id="formulario">
+      <p class="eyebrow rise">É aniversário do</p>
 
-    <div class="band rise d1">
-      <h1 class="name">THIAGO<br>VALÉRIO</h1>
-    </div>
+      <div class="band rise d1">
+        <h1 class="name">THIAGO<br>VALÉRIO</h1>
+      </div>
 
-    <p class="tagline rise d2">Cruz de malta no peito, samba no pé</p>
+      <p class="tagline rise d2">Cruz de malta no peito, samba no pé</p>
 
-    <p class="cd-label rise d3">FALTAM PRO ROLÊ</p>
-    <div class="cd-row rise d3" aria-label="Contagem regressiva para o evento">
-      <div class="cd-bloco"><div class="cd-num" id="cd-d">--</div><div class="cd-cap">DIAS</div></div>
-      <div class="cd-bloco"><div class="cd-num" id="cd-h">--</div><div class="cd-cap">HORAS</div></div>
-      <div class="cd-bloco"><div class="cd-num" id="cd-m">--</div><div class="cd-cap">MIN</div></div>
-      <div class="cd-bloco dest"><div class="cd-num" id="cd-s">--</div><div class="cd-cap">SEG</div></div>
-    </div>
+      <p class="cd-label rise d3">FALTAM PRO ROLÊ</p>
+      <div class="cd-row rise d3" aria-label="Contagem regressiva para o evento">
+        <div class="cd-bloco"><div class="cd-num" id="cd-d">--</div><div class="cd-cap">DIAS</div></div>
+        <div class="cd-bloco"><div class="cd-num" id="cd-h">--</div><div class="cd-cap">HORAS</div></div>
+        <div class="cd-bloco"><div class="cd-num" id="cd-m">--</div><div class="cd-cap">MIN</div></div>
+        <div class="cd-bloco dest"><div class="cd-num" id="cd-s">--</div><div class="cd-cap">SEG</div></div>
+      </div>
 
-    <p class="data-linha rise d4">Sábado, <b>29/08</b> · <b>12h</b> · Clube do Recanto, Barra Mansa</p>
+      <p class="data-linha rise d4">Sábado, <b>29/08</b> · <b>12h</b> · Clube do Recanto, Barra Mansa</p>
 
-    <a id="cta" class="cta" href="#" target="_blank" rel="noopener noreferrer">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.86 13.6c-.26.73-1.52 1.41-2.12 1.5-.54.08-1.23.12-1.98-.12-.45-.14-1.04-.31-1.79-.6-3.15-1.23-5.2-4.4-5.36-4.61-.16-.21-1.29-1.71-1.29-3.26 0-1.54.81-2.31 1.1-2.62.29-.31.63-.39.84-.39h.6c.19.01.45-.07.71.54.27.63.9 2.19.98 2.35.08.16.13.34.03.55-.1.21-.15.34-.31.52-.16.18-.33.41-.47.55-.16.15-.32.32-.14.63.18.31.81 1.33 1.74 2.16 1.19 1.06 2.2 1.39 2.51 1.55.31.16.5.13.68-.08.19-.21.79-.92 1-1.23.21-.32.42-.27.71-.16.29.1 1.84.86 2.15 1.02.31.16.52.24.6.37.08.13.08.76-.18 1.49Z"/>
-      </svg>
-      CONFIRMAR PRESENÇA AQUI
-    </a>
+      <form class="form rise d4" id="form" novalidate>
+        <div class="campo" id="campo-nome">
+          <label for="nome">Seu nome</label>
+          <input id="nome" name="nome" type="text" autocomplete="name" placeholder="Nome e sobrenome" />
+          <p class="erro" id="erro-nome"></p>
+        </div>
 
-    <p class="lgpd rise d4">Ao confirmar, você concorda em receber pelo WhatsApp os detalhes do evento. Seus dados são usados só para isso, conforme a LGPD.</p>
+        <div class="campo" id="campo-whatsapp">
+          <label for="whatsapp">Seu WhatsApp</label>
+          <input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(24) 90000-0000" maxlength="15" />
+          <p class="erro" id="erro-whatsapp"></p>
+        </div>
+
+        <div class="campo" id="campo-acompanhantes">
+          <label for="acompanhantes">Vai levar quantas pessoas?</label>
+          <input id="acompanhantes" name="acompanhantes" type="number" inputmode="numeric" min="0" max="10" step="1" value="0" />
+          <p class="erro" id="erro-acompanhantes"></p>
+        </div>
+
+        <button type="submit" class="cta" id="btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.86 13.6c-.26.73-1.52 1.41-2.12 1.5-.54.08-1.23.12-1.98-.12-.45-.14-1.04-.31-1.79-.6-3.15-1.23-5.2-4.4-5.36-4.61-.16-.21-1.29-1.71-1.29-3.26 0-1.54.81-2.31 1.1-2.62.29-.31.63-.39.84-.39h.6c.19.01.45-.07.71.54.27.63.9 2.19.98 2.35.08.16.13.34.03.55-.1.21-.15.34-.31.52-.16.18-.33.41-.47.55-.16.15-.32.32-.14.63.18.31.81 1.33 1.74 2.16 1.19 1.06 2.2 1.39 2.51 1.55.31.16.5.13.68-.08.19-.21.79-.92 1-1.23.21-.32.42-.27.71-.16.29.1 1.84.86 2.15 1.02.31.16.52.24.6.37.08.13.08.76-.18 1.49Z"/>
+          </svg>
+          <span id="btn-txt">CONFIRMAR PRESENÇA</span>
+        </button>
+
+        <p class="form-erro" id="form-erro" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="lgpd rise d4">Ao confirmar, você concorda em receber pelo WhatsApp os detalhes do evento. Seus dados são usados só para isso, conforme a LGPD.</p>
+    </section>
+
+    <section id="confirmado" hidden>
+      <p class="eyebrow rise">Presença confirmada</p>
+
+      <div class="band rise d1">
+        <h1 class="name">TE VEJO<br>LÁ!</h1>
+      </div>
+
+      <p class="tagline rise d2" id="msg-confirmado">Tá na lista. Agora é só chegar.</p>
+
+      <p class="data-linha rise d3">Sábado, <b>29/08</b> · <b>12h</b> · Clube do Recanto, Barra Mansa</p>
+
+      <p class="lgpd rise d4">Qualquer novidade sobre o rolê, a gente te avisa no WhatsApp.</p>
+    </section>
   </main>
 
   <script>
     // ---- CONFERIR ----
-    // Número oficial (55 + DDD + número, só dígitos). Fixo de 8 dígitos:
-    // só funciona se estiver ativo no WhatsApp e for a linha ligada ao bot (oktalk/n8n).
-    var NUMERO_OFICIAL = "552431400026";
-    var MENSAGEM_GATILHO = "Quero confirmar presença no aniversário do Thiago";
     var DATA_EVENTO_ISO = "2026-08-29T12:00:00-03:00";
-    // ------------------
 
-    document.getElementById("cta").href =
-      "https://wa.me/" + NUMERO_OFICIAL + "?text=" + encodeURIComponent(MENSAGEM_GATILHO);
+    // A anon key é pública por design e depende da RLS da tabela para ser segura.
+    // Nunca trocar pela chave "service_role" — ela ignora RLS e vazaria a lista inteira.
+    var SUPABASE_URL = "https://rgbfbrnwynbpbcqxexon.supabase.co";
+    var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJnYmZicm53eW5icGJjcXhleG9uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MDgzNjUsImV4cCI6MjA5NTM4NDM2NX0.1KaV9VjMUcWk5RqrEhAJOZtYfbGbpCBujPXiVTS40Bo";
+    var TABELA = "confirmacoes_aniversario";
+    // ------------------
 
     var target = new Date(DATA_EVENTO_ISO).getTime();
     function pad(n){ return String(n).padStart(2,"0"); }
@@ -141,7 +197,117 @@
       document.getElementById("cd-s").textContent = pad(Math.floor(diff%60000/1000));
     }
     tick();
-    setInterval(tick, 1000);
+    var timer = setInterval(tick, 1000);
+
+    var form = document.getElementById("form");
+    var btn = document.getElementById("btn");
+    var btnTxt = document.getElementById("btn-txt");
+    var formErro = document.getElementById("form-erro");
+
+    var inputNome = document.getElementById("nome");
+    var inputWhats = document.getElementById("whatsapp");
+    var inputAcomp = document.getElementById("acompanhantes");
+
+    function soDigitos(v){ return v.replace(/\D/g, ""); }
+
+    function mascaraTel(v){
+      var d = soDigitos(v).slice(0, 11);
+      if(d.length <= 2) return d;
+      if(d.length <= 6) return "(" + d.slice(0,2) + ") " + d.slice(2);
+      if(d.length <= 10) return "(" + d.slice(0,2) + ") " + d.slice(2,6) + "-" + d.slice(6);
+      return "(" + d.slice(0,2) + ") " + d.slice(2,7) + "-" + d.slice(7);
+    }
+
+    inputWhats.addEventListener("input", function(){
+      inputWhats.value = mascaraTel(inputWhats.value);
+    });
+
+    function marcar(campoId, msg){
+      var campo = document.getElementById(campoId);
+      var erro = campo.querySelector(".erro");
+      var input = campo.querySelector("input");
+      if(msg){
+        campo.classList.add("invalido");
+        erro.textContent = msg;
+        input.setAttribute("aria-invalid", "true");
+      } else {
+        campo.classList.remove("invalido");
+        erro.textContent = "";
+        input.removeAttribute("aria-invalid");
+      }
+      return !msg;
+    }
+
+    function validar(){
+      var ok = true;
+
+      var nome = inputNome.value.trim().replace(/\s+/g, " ");
+      if(nome.length < 3) ok = marcar("campo-nome", "Escreve seu nome aí.") && ok;
+      else if(nome.indexOf(" ") === -1) ok = marcar("campo-nome", "Coloca o sobrenome também.") && ok;
+      else ok = marcar("campo-nome", null) && ok;
+
+      var d = soDigitos(inputWhats.value);
+      if(d.length === 0) ok = marcar("campo-whatsapp", "Precisamos do seu WhatsApp.") && ok;
+      else if(d.length < 10 || d.length > 11) ok = marcar("campo-whatsapp", "Número incompleto — com DDD.") && ok;
+      else if(d.length === 11 && d.charAt(2) !== "9") ok = marcar("campo-whatsapp", "Celular com 11 dígitos começa com 9 depois do DDD.") && ok;
+      else ok = marcar("campo-whatsapp", null) && ok;
+
+      var n = Number(inputAcomp.value);
+      if(inputAcomp.value === "" || !Number.isInteger(n) || n < 0 || n > 10) {
+        ok = marcar("campo-acompanhantes", "De 0 a 10 pessoas.") && ok;
+      } else {
+        ok = marcar("campo-acompanhantes", null) && ok;
+      }
+
+      return ok;
+    }
+
+    function confirmar(nome){
+      clearInterval(timer);
+      var primeiro = nome.split(" ")[0];
+      document.getElementById("msg-confirmado").textContent =
+        "Valeu, " + primeiro + "! Tá na lista. Agora é só chegar.";
+      document.getElementById("formulario").hidden = true;
+      document.getElementById("confirmado").hidden = false;
+      window.scrollTo(0, 0);
+    }
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      formErro.textContent = "";
+      if(!validar()) return;
+
+      var nome = inputNome.value.trim().replace(/\s+/g, " ");
+      var payload = {
+        nome: nome,
+        whatsapp: soDigitos(inputWhats.value),
+        acompanhantes: Number(inputAcomp.value)
+      };
+
+      btn.disabled = true;
+      btnTxt.textContent = "ENVIANDO...";
+
+      fetch(SUPABASE_URL + "/rest/v1/" + TABELA, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(function(res){
+        if(!res.ok) return res.text().then(function(t){ throw new Error(t || res.status); });
+        confirmar(nome);
+      })
+      .catch(function(err){
+        console.error("Falha ao confirmar:", err);
+        btn.disabled = false;
+        btnTxt.textContent = "CONFIRMAR PRESENÇA";
+        formErro.textContent = "Não rolou enviar agora. Tenta de novo em instantes.";
+      });
+    });
   </script>
 </body>
 </html>
